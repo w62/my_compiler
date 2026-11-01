@@ -1,4 +1,39 @@
+use clap::{ArgAction, Parser, ValueEnum};
+use std::path::PathBuf;
+
+#[derive(Debug, Clone, Copy, ValueEnum)]
+enum EmitType {
+    Ast,
+    Asm,
+    LlvmIr,
+    Object,
+}
+
+#[derive(Parser, Debug)]
+#[command(name = "compiler", version, about = "My compiler")]
+struct Cli {
+    /// Input source file!
+    input: String,
+
+    /// Output file
+    #[arg(short, long, default_value = "a.out")]
+    output: String,
+
+    #[arg(long, value_enum, default_value_t = EmitType::Asm)]
+    emit: EmitType,
+
+    /// Enable
+    #[arg(short, long)]
+    verbose: bool,
+}
+
 fn main() {
+    let args = Cli::parse();
+
+    println!("Input: {}", args.input);
+    println!("Output: {}", args.output);
+    println!("Verbose: {}", args.verbose);
+    println!("Emit: {:?}", args.emit);
     println!("Hello, world!");
     // Standard suffix to indicate u64 type
     let a = lexer::add(1_u64, 2_u64);
